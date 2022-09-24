@@ -3,27 +3,21 @@ import {AppContainer} from "./styles";
 import {Column} from "./Column";
 import {Card} from "./Card";
 import {AddNewItem} from "./AddNewItem";
+import {useAppState} from "./AppStateContext";
 
 
 function App() {
+    const {state,dispatch} = useAppState();
   return (
       <AppContainer>
-          <Column text="Heyo mate">
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-          </Column>
-          <Column text="Heyo mate">
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-              <Card text="First little card"/>
-          </Column>
-          <AddNewItem onAdd={()=> console.log("new col please")} toggleButtonText="+ Add new column"/>
+          {state.lists.map((l, i) => {
+             return <Column index={i} key={l.id} text={l.text} id={l.id}/>
+          })}
+          <AddNewItem onAdd={text => dispatch({type: "ADD_LIST", payload: text})} toggleButtonText="+ Add new column"/>
       </AppContainer>
   );
 }
 
 export default App;
+
+
