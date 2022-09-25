@@ -1,6 +1,9 @@
 import React, {createContext, useContext, useReducer} from "react";
 import {v4 as uuid} from "uuid";
 import {findItemIndexById} from "./utils/findItemIndexById";
+import {hover} from "@testing-library/user-event/dist/hover";
+import {moveItem} from "./moveItem";
+import {DragItem} from "./DragItem";
 
 const appData: AppState = { lists: [
         {
@@ -18,7 +21,8 @@ const appData: AppState = { lists: [
             text: "Done",
             tasks: [{ id: "c3", text: "Begin to use static typing" }]
         }
-    ]
+    ],
+    draggedItem: undefined
 }
 
 interface Task {
@@ -32,7 +36,8 @@ interface List {
 }
 
 export interface AppState {
-    lists: List[]
+    lists: List[];
+    draggedItem: DragItem | undefined
 }
 
 // Create context so the entire app can access the appData
@@ -76,7 +81,11 @@ type Action =
         dragIndex: number,
         hoverIndex: number
     }
+} | {
+    type: "SET_DRAGGED_ITEM",
+    payload: DragItem | undefined
 }
+
 
 const appStateReducer = (state: AppState, action: Action): AppState => {
     switch (action.type) {
@@ -91,11 +100,18 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
             const targetListIndex = findItemIndexById(state.lists, action.payload.taskId)
             state.lists[targetListIndex].tasks.push({
                 id: uuid(),
-                text: action.payload.text
-            })
-            return {
-                ...state }
-        } default: {
+                text: action.payload.text })
+            return {...state }
+        }
+        case "MOVE_LIST":
+            // things
+            const {dragIndex, hoverIndex} = action.payload;
+           moveItem(state.lists, dragIndex, hoverIndex);
+            // state.lists = moveItem(state.lists, dragIndex, hoverIndex)
+            return {...state }
+        case "SET_DRAGGED_ITEM":
+            return {...state, draggedItem: action.payload}
+        default: {
             return state
         }
     } 
