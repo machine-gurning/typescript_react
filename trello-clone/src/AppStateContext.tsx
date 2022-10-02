@@ -41,7 +41,6 @@ export interface AppState {
 }
 
 // Create context so the entire app can access the appData
-
 interface AppStateContextProps {
     state: AppState
     dispatch: React.Dispatch<Action>
@@ -103,14 +102,16 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
                 text: action.payload.text })
             return {...state }
         }
-        case "MOVE_LIST":
+        case "MOVE_LIST": {
             // things
             const {dragIndex, hoverIndex} = action.payload;
-           moveItem(state.lists, dragIndex, hoverIndex);
+            moveItem(state.lists, dragIndex, hoverIndex);
             // state.lists = moveItem(state.lists, dragIndex, hoverIndex)
-            return {...state }
-        case "SET_DRAGGED_ITEM":
+            return {...state}
+        }
+        case "SET_DRAGGED_ITEM": {
             return {...state, draggedItem: action.payload}
+        }
         default: {
             return state
         }

@@ -10,9 +10,10 @@ export const useItemDrag = (item: DragItem) => {
     const [_, drag] = useDrag({
         type: item.type,
         item:  () => {
-            dispatch({// callback is triggered when drag starts
-                    type: "SET_DRAGGED_ITEM",
-                    payload: item
+            dispatch({
+                // callback is triggered when drag starts
+                type: "SET_DRAGGED_ITEM",
+                payload: item
                 })
         return item}, // The item itself
         end: () => // callback triggered when item finishes
